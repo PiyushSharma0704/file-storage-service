@@ -2,6 +2,6 @@ require("dotenv").config();
 
 module.exports = {
   PORT: process.env.PORT || 3000,
-  MONGO_URI: process.env.MONGO_URI || "mongodb://localhost:27017/",
+  MONGO_URI: process.env.MONGO_URI || process.env.MONGODB_URI || "mongodb://localhost:27017",
   DATABASE_NAME: process.env.DATABASE_NAME || "file-storage-service",
-};  
+};

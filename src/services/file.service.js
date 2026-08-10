@@ -10,12 +10,12 @@ async function getFiles() {
 }
 
 async function getFileById(id) {
-  return File.findById(id);
+  return File.findOne({ _id: id, isDeleted: false });
 }
 
 async function deleteFile(id) {
-  return File.findByIdAndUpdate(
-    id,
+  return File.findOneAndUpdate(
+    { _id: id, isDeleted: false },
     {
       isDeleted: true,
     },

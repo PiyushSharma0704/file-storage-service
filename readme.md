@@ -71,6 +71,18 @@ Run
 npm run dev
 ```
 
+## File APIs
+
+All uploaded files use `multipart/form-data` with a `file` field and have a 5 MB limit.
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| POST | `/files/upload` | Upload a JPEG, PNG, WEBP, or PDF and save its metadata. |
+| GET | `/files` | List active file metadata. |
+| GET | `/files/:id` | Get one file's metadata. |
+| GET | `/files/:id/download` | Download a file using its original name. |
+| DELETE | `/files/:id` | Remove the local file and soft-delete its metadata. |
+
 ---
 
 ## Environment Variables
@@ -78,7 +90,8 @@ npm run dev
 ```
 PORT=3000
 
-MONGODB_URI=mongodb://localhost:27017/file-storage
+MONGO_URI=mongodb://localhost:27017
+DATABASE_NAME=file-storage-service
 ```
 
 ---

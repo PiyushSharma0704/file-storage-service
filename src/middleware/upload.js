@@ -2,20 +2,22 @@ const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 
+const uploadsRoot = path.join(__dirname, "../uploads");
+
 const storage = multer.diskStorage({
   destination(req, file, cb) {
     if (file.mimetype.startsWith("image/")) {
-      return cb(null, "src/uploads/images");
+      return cb(null, path.join(uploadsRoot, "images"));
     }
 
     if (
       file.mimetype === "application/pdf" ||
       file.mimetype.includes("document")
     ) {
-      return cb(null, "src/uploads/documents");
+      return cb(null, path.join(uploadsRoot, "documents"));
     }
 
-    cb(null, "src/uploads/others");
+    cb(null, path.join(uploadsRoot, "others"));
   },
 
   filename(req, file, cb) {

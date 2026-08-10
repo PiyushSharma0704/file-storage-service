@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const fileRoutes = require("./routes/file.routes");
 const errorHandler = require("./middleware/errorHandler");
 const httpLogger = require("./middleware/logger");
+const path = require("path");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(helmet());
 // app.use(morgan("dev"));
 app.use(httpLogger);
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
 

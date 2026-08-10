@@ -8,9 +8,9 @@
 - [ ] Phase 4 — Local Storage
 - [ ] Phase 5 — Multiple Uploads
 - [ ] Phase 6 — File Validation
-- [ ] Phase 7 — File Metadata
-- [ ] Phase 8 — Download APIs
-- [ ] Phase 9 — Delete APIs
+- [x] Phase 7 — File Metadata
+- [x] Phase 8 — Download APIs
+- [x] Phase 9 — Delete APIs
 - [ ] Phase 10 — Buffers
 - [ ] Phase 11 — Streams
 - [ ] Phase 12 — Streaming Downloads
