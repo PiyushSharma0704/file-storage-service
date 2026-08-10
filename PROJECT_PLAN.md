@@ -132,184 +132,93 @@ Deliverables
 
 ---
 
-# Phase 7
+Module 2
 
-Metadata Storage
 
+File Management System
 Topics
+MongoDB Metadata
+File Schema
+Save Upload Info
+Download API
+Delete API
+Error Handling
+File Collection
 
-- MongoDB Schema
-- Store URLs
-- Store MIME
-- Store Size
 
 Deliverables
+POST   /files/upload
 
-- File collection
+GET    /files
 
----
+GET    /files/:id
 
-# Phase 8
+GET    /files/:id/download
 
-Download APIs
+DELETE /files/:id
 
+
+Module 3 (Combine Phase 10 + 11 + 12)
+Buffers & Streams
 Topics
+Buffer
+Binary Data
+Read Stream
+Write Stream
+Pipe
+Backpressure
+Range Requests
 
-- res.download()
-- Content-Disposition
-- Headers
 
 Deliverables
+GET /files/:id/stream
 
-- Download endpoint
+Learn:
 
----
+fs.createReadStream()
 
-# Phase 9
+fs.createWriteStream()
 
-Delete APIs
+stream.pipe()
 
-Topics
+This is the most important backend concept in this project.
 
-- fs.unlink()
-- Mongo Delete
-- Error Handling
 
-Deliverables
-
-- Delete endpoint
-
----
-
-# Phase 10
-
-Buffers
-
-Topics
-
-- Binary Data
-- Memory
-- Buffer API
-
-Deliverables
-
-- Buffer-based upload understanding
-
----
-
-# Phase 11
-
-Streams
-
-Topics
-
-- Read Stream
-- Write Stream
-- Pipe
-- Backpressure
-
-Deliverables
-
-- Efficient large file handling
-
----
-
-# Phase 12
-
-Streaming Downloads
-
-Topics
-
-- Video Streaming
-- Large Downloads
-- Range Requests
-
-Deliverables
-
-- Streaming API
-
----
-
-# Phase 13
-
+Module 4 (Combine Phase 13 + 14 + 15)
+Cloud Storage
 AWS S3
-
-Topics
-
-- Buckets
-- Upload
-- Download
-- Delete
-- Signed URLs
-
-Deliverables
-
-- Production storage
-
----
-
-# Phase 14
-
+Upload
+Download
+Delete
 Cloudinary
-
-Topics
-
-- Image Upload
-- Transformations
-- Thumbnails
-
-Deliverables
-
-- Image CDN
-
----
-
-# Phase 15
-
+Upload Images
+Transformations
 Signed URLs
+GET /files/:id/url
 
+Deliverables:
+
+POST /files/upload/s3
+
+POST /files/upload/cloudinary
+
+DELETE /files/:id
+Module 5 (Combine Phase 16 + 17)
+Production Architecture
 Topics
-
-- Temporary Access
-- Security
-- Expiration
-
+Large Uploads
+Multipart Upload
+Chunk Upload
+Rate Limiting
+Virus Scanning
+Logging
+Monitoring
+Cleanup Jobs
+CDN
 Deliverables
 
-- Private file access
+Production-ready architecture discussion.
 
----
+No need to build everything.
 
-# Phase 16
-
-Large File Uploads
-
-Topics
-
-- Streams
-- Multipart Upload
-- Chunk Upload
-
-Deliverables
-
-- 1GB+ upload support
-
----
-
-# Phase 17
-
-Production Best Practices
-
-Topics
-
-- Security
-- Virus Scanning
-- Rate Limiting
-- Logging
-- Monitoring
-- CDN
-- Cleanup Jobs
-
-Deliverables
-
-Production-ready File Storage Service
+Understand design.

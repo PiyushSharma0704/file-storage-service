@@ -1,6 +1,6 @@
 # File Storage Service
 
-A production-ready File Upload & Storage Service built with Node.js, Express, MongoDB, and Multer.
+a.
 
 The goal of this project is to deeply understand how file uploads work—from the HTTP protocol to production cloud storage.
 
