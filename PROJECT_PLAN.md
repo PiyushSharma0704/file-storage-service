@@ -11,9 +11,9 @@
 - [x] Phase 7 — File Metadata
 - [x] Phase 8 — Download APIs
 - [x] Phase 9 — Delete APIs
-- [ ] Phase 10 — Buffers
-- [ ] Phase 11 — Streams
-- [ ] Phase 12 — Streaming Downloads
+- [x] Phase 10 — Buffers
+- [x] Phase 11 — Streams
+- [x] Phase 12 — Streaming Downloads
 - [ ] Phase 13 — AWS S3
 - [ ] Phase 14 — Cloudinary
 - [ ] Phase 15 — Signed URLs

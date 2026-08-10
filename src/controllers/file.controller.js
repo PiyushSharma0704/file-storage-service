@@ -1,4 +1,5 @@
-const fs = require("fs/promises");
+const fs = require("fs");
+const fsp = require("fs/promises");
 const path = require("path");
 const mongoose = require("mongoose");
 const fileService = require("../services/file.service");
@@ -67,7 +68,7 @@ async function uploadFile(req, res) {
 
     return res.status(201).json({ success: true, file: toFileResponse(file) });
   } catch (error) {
-    await fs.unlink(req.file.path).catch(() => {});
+    await fsp.unlink(req.file.path).catch(() => {});
     throw error;
   }
 }
@@ -102,7 +103,7 @@ async function downloadFile(req, res, next) {
 
   const localPath = getLocalPath(file);
   try {
-    await fs.access(localPath);
+    await fsp.access(localPath);
   } catch {
     const error = new Error("File contents not found");
     error.statusCode = 404;
@@ -125,7 +126,7 @@ async function removeFile(req, res) {
   }
 
   const localPath = getLocalPath(file);
-  await fs.unlink(localPath).catch((error) => {
+  await fsp.unlink(localPath).catch((error) => {
     if (error.code !== "ENOENT") throw error;
   });
   await fileService.deleteFile(req.params.id);
@@ -133,4 +134,98 @@ async function removeFile(req, res) {
   res.json({ success: true, message: "File deleted successfully" });
 }
 
-module.exports = { uploadFile, listFiles, getFile, downloadFile, removeFile };
+function parseRange(rangeHeader, size) {
+  if (!rangeHeader) return null;
+
+  const match = /^bytes=(\d*)-(\d*)$/.exec(rangeHeader);
+  if (!match) return undefined;
+
+  const [, startValue, endValue] = match;
+  if (!startValue && !endValue) return undefined;
+
+  let start;
+  let end;
+  if (!startValue) {
+    const suffixLength = Number(endValue);
+    if (!Number.isSafeInteger(suffixLength) || suffixLength <= 0) return undefined;
+    start = Math.max(size - suffixLength, 0);
+    end = size - 1;
+  } else {
+    start = Number(startValue);
+    end = endValue ? Number(endValue) : size - 1;
+  }
+
+  if (
+    !Number.isSafeInteger(start) ||
+    !Number.isSafeInteger(end) ||
+    start < 0 ||
+    start >= size ||
+    end < start
+  ) {
+    return undefined;
+  }
+
+  return { start, end: Math.min(end, size - 1) };
+}
+
+async function streamFile(req, res, next) {
+  validateId(req.params.id);
+  const file = await fileService.getFileById(req.params.id);
+
+  if (!file) {
+    const error = new Error("File not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const localPath = getLocalPath(file);
+  let stats;
+  try {
+    stats = await fsp.stat(localPath);
+  } catch {
+    const error = new Error("File contents not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (!stats.isFile()) {
+    const error = new Error("File contents not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const range = parseRange(req.headers.range, stats.size);
+  if (range === undefined) {
+    return res.status(416).set("Content-Range", `bytes */${stats.size}`).end();
+  }
+
+  const start = range?.start;
+  const end = range?.end;
+  const contentLength = range ? end - start + 1 : stats.size;
+  const statusCode = range ? 206 : 200;
+
+  res.writeHead(statusCode, {
+    "Accept-Ranges": "bytes",
+    "Content-Type": file.mimeType,
+    "Content-Length": contentLength,
+    ...(range && { "Content-Range": `bytes ${start}-${end}/${stats.size}` }),
+  });
+
+  const readStream = range
+    ? fs.createReadStream(localPath, { start, end })
+    : fs.createReadStream(localPath);
+  readStream.on("error", (error) => {
+    if (res.headersSent) return res.destroy(error);
+    return next(error);
+  });
+  readStream.pipe(res);
+}
+
+module.exports = {
+  uploadFile,
+  listFiles,
+  getFile,
+  downloadFile,
+  removeFile,
+  streamFile,
+};

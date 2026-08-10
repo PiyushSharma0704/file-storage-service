@@ -81,7 +81,10 @@ All uploaded files use `multipart/form-data` with a `file` field and have a 5 MB
 | GET | `/files` | List active file metadata. |
 | GET | `/files/:id` | Get one file's metadata. |
 | GET | `/files/:id/download` | Download a file using its original name. |
+| GET | `/files/:id/stream` | Stream a file; accepts a single `Range: bytes=start-end` request. |
 | DELETE | `/files/:id` | Remove the local file and soft-delete its metadata. |
+
+`GET /files/:id/stream` uses `fs.createReadStream()` and `readStream.pipe(res)` instead of loading the file into memory. Piping lets Node pause and resume the source stream to match the response's capacity (backpressure). Range requests return `206 Partial Content`, enabling media seeking and resumable downloads.
 
 ---
 
